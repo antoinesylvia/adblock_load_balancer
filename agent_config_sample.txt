@@ -1,0 +1,14 @@
+# IP of metrics server
+METRICS_IP: 192.168.1.99
+
+# UDP port for metrics server, make sure host has firewall rule to allow inbound requests on this port.
+METRICS_UDP_PORT: 32500
+
+# Address to send heartbeat signal via HTTP
+HEARTBEAT_URL: http://192.168.1.99:32500/heartbeat
+
+# How often to send heartbeat signal
+HEARTBEAT_INTERVAL: 60
+
+# List of IPs allowed for outbound requests
+ALLOWED_IP_ADDRESSES: 192.168.1.99

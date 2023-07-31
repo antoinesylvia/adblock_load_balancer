@@ -1,0 +1,55 @@
+# Metrics Configuration
+
+AGENT_MAX_ALLOWED_DATA_SIZE: 200
+# Maximum allowed size of data from agent in bytes
+
+ALLOWED_IPS_LOAD_BALANCERS: 192.168.1.99, 192.168.1.55, 192.168.1.66
+# IP list of load balancers able to pull metrics
+
+CONTENT_LENGTH_HEADER: Content-length
+# Size of the entity-body
+
+CONTENT_TYPE_HEADER: Content-type
+# Indicate the media type of the body sent to the recipient
+
+DISCORD_WEBHOOK_URL: https://discord.com/api/webhooks/xxxxxxxxxxxxx
+# URL of your Discord webhook
+
+HEARTBEAT_ALERT_INTERVAL: 12
+# Time to wait before sending a notification to Discord that an agent is not reporting
+
+HEARTBEAT_INTERVAL: 10
+# Interval in seconds for heartbeat check
+
+HEARTBEAT_LAST_NOTIFICATION_FILE: heartbeat.json
+# File to store the timestamp of the last notification
+
+LOG_FILE_BACKUP_COUNT: 1
+# Number of backups created
+
+LOG_FILE_MAX_BYTES: 20971520
+# 20 MB
+
+LOG_FILE_NAME: metrics.log
+# Name of log
+
+LOG_LEVEL: INFO
+# Log level details
+
+METRICS_SERVER_ADDRESS_TCP_IP: 192.168.1.99
+# Main load balancer code pulls from this address (IP of host running this code) via the HTTP server spun up in this code
+
+METRICS_SERVER_ADDRESS_TCP_PORT: 32500
+# Port of the main load balancer code
+
+METRICS_SOCKET_ADDRESS_UDP_IP: 192.168.1.99
+# Agents send metrics to this address via UDP (the host IP running this code)
+
+METRICS_SOCKET_ADDRESS_UDP_MAX_BIND_RETRIES: 10
+# Maximum number of attempts to bind the UDP socket
+
+METRICS_SOCKET_ADDRESS_UDP_PORT: 32500
+# Port for UDP communication
+
+PI_HOLE_SERVERS: 192.168.1.133, 192.168.1.134, 192.168.1.135
+# List of PiHole server IP addresses

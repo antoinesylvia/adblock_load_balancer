@@ -28,10 +28,10 @@ Host config in DNS settings:
 1. For the server(s) running the Load Balancer main script, ensure UDP port 53 is open on the host firewall (receive DNS traffic from devices)
 2. For the server(s) running the Metrics script, ensure the 2 ports you select for UDP (need to accept inbound metrics data for server usage from agents) and TCP (used by load balancer main script to pull metrics data for server usage)
 -------------------
-Setup config file (coming soon, sampe is attached in repo):
-1. Agents - 
-2. Metrics -
-3. Load Balancer - 
+Setup config file (samples attached in repo):
+1. Agents - See comments in sample stored in this repo, adjust IPs and ports based on your setup.
+2. Metrics -  See comments in sample stored in this repo, adjust IPs and ports based on your setup.
+3. Load Balancer -  See comments in sample stored in this repo, adjust IPs and ports based on your setup.
 -------------------
 To-do:
 1. Assymetric - Add RSA keys (public/private) for initial handshake between components.

@@ -3,7 +3,7 @@ Tool to forward raw DNS requests to the PiHole/Adguard with the least load (2+ r
 1. Agents script (pushes server usage stats where PiHole/Adguard is installed)
 2. Metrics script (collects real-time server usage information from agents)
 3. Load Balancer main script (uses data pulled from metrics to make a decision).
-
+-------------------
 Flow options for devices - Backend:
 1. Device on LAN<-->Load Balancer<-->PiHole/AdguardHome<-->Unbound(recursive DNS - local install)
 2. Device on LAN<-->Load Balancer<-->PiHole/AdguardHome<-->Unbound(recursive DNS - local install)<-->3rd party (CloudFlare/Google etc.)

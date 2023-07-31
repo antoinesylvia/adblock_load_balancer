@@ -4,7 +4,16 @@ Tool to forward raw DNS requests to the PiHole/Adguard with the least load (2+ r
 2. Metrics script (collects real-time server usage information from agents)
 3. Load Balancer main script (uses data pulled from metrics to make a decision).
 
-Process Breakdown:
+Flow options for devices - Backend:
+Device on LAN<-->Load Balancer<-->PiHole/AdguardHome<-->Unbound(recursive DNS - local install)
+Device on LAN<-->Load Balancer<-->PiHole/AdguardHome<-->Unbound(recursive DNS - local install)<-->3rd party (CloudFlare/Google etc.)
+Device on LAN<-->Load Balancer<-->PiHole/AdguardHome<-->3rd party (CloudFlare/Google etc.)
+
+Flow for componments:
+agents script (running on servers with PiHole/AdguardHome installed, pushes usage data)---->metrics script (running on server without PiHole/Adguard, collects usage data via UDP and allows metrics pulls via HTTP)<--->Load Balancer main(pulls metrics data, makes server decision for DNS request based on least load)---->PiHole(Receives DNS request) 
+
+
+Process Breakdown - Basic:
 
 
 
@@ -12,7 +21,8 @@ Router config in DNS settings:
 1. WAN DNS - Add the IP of the server(s) where you are running the Load Balancer main script.
 2. LAN DNS - Add the IP of the server(s) where you are running the Load Balancer main script (for advanced router software running under Unifi or PfSense etc., LAN DNS will ensure devices with DNS set as automatic will use the IP(s) for the Load Balancer).
 
-Note: I recommend running the Load Balancer main script on two devices for redundancy. The IP address info data should show primarily IPs for devices (non-router) in metrics if you have LAN DNS setup appropiately. 
+Note 1: I recommend running the Load Balancer main script on two devices for redundancy. The IP address info data should show primarily IPs for devices (non-router) in metrics if you have LAN DNS setup appropiately. 
+Note 2: If you have a Wireguard server running on a seperate VLAN than the Load Balancer server running the script, you can add a firewall rule so devices can send DNS requests directly or you can route them through the gateway (metrics logs will show gateway IP for these requests).
 
 Host config in DNS settings:
 1. For the server(s) running the Load Balancer main script, ensure UDP port 53 is open on the host firewall (receive DNS traffic from devices)
@@ -27,3 +37,4 @@ To-do:
 1. Assymetric - Add RSA keys (public/private) for initial handshake between components.
 2. Symmetric - Use to transfer data (pre-shared).
 3. Dockerized version.
+4. Discord Notifications

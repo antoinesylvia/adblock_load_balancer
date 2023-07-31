@@ -5,17 +5,17 @@ Tool to forward raw DNS requests to the PiHole/Adguard with the least load (2+ r
 3. Load Balancer main script (uses data pulled from metrics to make a decision).
 
 Flow options for devices - Backend:
-Device on LAN<-->Load Balancer<-->PiHole/AdguardHome<-->Unbound(recursive DNS - local install)
-Device on LAN<-->Load Balancer<-->PiHole/AdguardHome<-->Unbound(recursive DNS - local install)<-->3rd party (CloudFlare/Google etc.)
-Device on LAN<-->Load Balancer<-->PiHole/AdguardHome<-->3rd party (CloudFlare/Google etc.)
+1. Device on LAN<-->Load Balancer<-->PiHole/AdguardHome<-->Unbound(recursive DNS - local install)
+2. Device on LAN<-->Load Balancer<-->PiHole/AdguardHome<-->Unbound(recursive DNS - local install)<-->3rd party (CloudFlare/Google etc.)
+3. Device on LAN<-->Load Balancer<-->PiHole/AdguardHome<-->3rd party (CloudFlare/Google etc.)
 
 Flow for componments:
-agents script (running on servers with PiHole/AdguardHome installed, pushes usage data)---->metrics script (running on server without PiHole/Adguard, collects usage data via UDP and allows metrics pulls via HTTP)<--->Load Balancer main(pulls metrics data, makes server decision for DNS request based on least load)---->PiHole(Receives DNS request) 
+Agents-->Metrics script<--->Load Balancer main--->PiHole/AdguardHome
 
-
-Process Breakdown - Basic:
-
-
+1. Agents script - Running on servers with PiHole/AdguardHome installed, pushes server usage data (psutil).
+2. Metrics script - Running on server without PiHole/Adguard, collects usage data via UDP and allows metrics pulls via HTTP (short term data only).
+3. Load Balancer main - Pulls metrics data, makes server decision for DNS request based on least load.
+4. PiHole/AdguardHome - Receives DNS request.
 
 Router config in DNS settings:
 1. WAN DNS - Add the IP of the server(s) where you are running the Load Balancer main script.

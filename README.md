@@ -1,8 +1,11 @@
 # adblock load balancer 2000
 Tool to forward raw DNS requests to the PiHole/Adguard with the least load (2+ required). Built for home LAN usage. Components here include: 
 1. Agents script (pushes server usage stats where PiHole/Adguard is installed)
+![agent](https://raw.githubusercontent.com/antoinesylvia/adblock_load_balancer/main/z_pics/agent.PNG)
 2. Metrics script (collects real-time server usage information from agents)
+![metrics](https://raw.githubusercontent.com/antoinesylvia/adblock_load_balancer/main/z_pics/metrics.PNG)
 3. Load Balancer main script (uses data pulled from metrics to make a decision).
+![load_balancer](https://raw.githubusercontent.com/antoinesylvia/adblock_load_balancer/main/z_pics/load_balancer.PNG)
 -------------------
 Flow options for devices - Backend:
 1. Device on LAN<-->Load Balancer<-->PiHole/AdguardHome<-->Unbound(recursive DNS - local install)

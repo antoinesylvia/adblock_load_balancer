@@ -19,9 +19,9 @@ Host config in DNS settings:
 2. For the server(s) running the Metrics script, ensure the 2 ports you select for UDP (need to accept inbound metrics data for server usage from agents) and TCP (used by load balancer main script to pull metrics data for server usage)
 
 Setup config file (coming soon, sampe is attached in repo):
-Agents - 
-Metrics -
-Load Balancer - 
+1. Agents - 
+2. Metrics -
+3. Load Balancer - 
 
 To-do:
 1. Assymetric - Add RSA keys (public/private) for initial handshake between components.

@@ -20,8 +20,9 @@ Agents-->Metrics script<--->Load Balancer main--->PiHole/AdguardHome
 Router config in DNS settings:
 1. WAN DNS - Add the IP of the server(s) where you are running the Load Balancer main script.
 2. LAN DNS - Add the IP of the server(s) where you are running the Load Balancer main script (for advanced router software running under Unifi or PfSense etc., LAN DNS will ensure devices with DNS set as automatic will use the IP(s) for the Load Balancer).
-note 1: I recommend running the Load Balancer main script on two devices for redundancy. The IP address info data should show primarily IPs for devices (non-router) in metrics if you have LAN DNS setup appropiately. 
-note 2: If you have a Wireguard server running on a seperate VLAN than the Load Balancer server running the script, you can add a firewall rule so devices can send DNS requests directly or you can route them through the gateway (metrics logs will show gateway IP for these requests).
+
+- note 1: I recommend running the Load Balancer main script on two devices for redundancy. The IP address info data should show primarily IPs for devices (non-router) in metrics if you have LAN DNS setup appropiately. 
+- note 2: If you have a Wireguard server running on a seperate VLAN than the Load Balancer server running the script, you can add a firewall rule so devices can send DNS requests directly or you can route them through the gateway (metrics logs will show gateway IP for these requests).
 -------------------
 Host config in DNS settings:
 1. For the server(s) running the Load Balancer main script, ensure UDP port 53 is open on the host firewall (receive DNS traffic from devices)

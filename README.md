@@ -1,5 +1,5 @@
 # adblock load balancer 2000
-Tool to forward raw DNS requests to the PiHole/Adguard with the least load (2+ required). Built for home LAN usage. Components here include: 
+Tool to forward raw DNS requests to the PiHole/Adguard with the least load (2+ required). Built for home LAN usage, my agents run on gen 1 Raspberry Pi units which I wanted to make use of as a summer project for 2023. Components here include: 
 1. Agents script (pushes server usage stats where PiHole/Adguard is installed)
 ![agent](https://raw.githubusercontent.com/antoinesylvia/adblock_load_balancer/main/z_pics/agent.PNG)
 2. Metrics script (collects real-time server usage information from agents)

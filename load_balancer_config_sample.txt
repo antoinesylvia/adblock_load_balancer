@@ -11,7 +11,7 @@ LOG_FILE_MAX_BYTES: 20971520
 LOG_FILE_BACKUP_COUNT: 1
 
 # Webhook URL for sending Discord notifications
-DISCORD_WEBHOOK_URL: https://discord.com/api/webhooks/1116069776289177693/eKNw-_cqOW4EkrEWIgUH5ID9HM7Tpv8d8F95CYebollNVruCuktfixqiAFVLlpW5eSJx
+DISCORD_WEBHOOK_URL: https://discord.com/api/webhooks/1116069776289177693/eKNw-_cqOW4EkrEWIgUH5ID9HM7Tpv8d8F95CYebollNVruCuktfixqiAFVLlpW5eSfdd2AsWwsdsfcfcrereetrrtddd
 
 # IP address used as the point for incoming DNS requests
 UDP_BIND_ADDRESS: 192.168.1.99

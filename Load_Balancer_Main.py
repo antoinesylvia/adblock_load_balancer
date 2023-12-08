@@ -214,9 +214,20 @@ class DNSServer:
 
     # Method to handle incoming DNS requests in normal mode
     def handle_request(self, data, addr):
-        request = DNSRecord.parse(data)
-        source_ip, _ = addr
         try:
+            request = DNSRecord.parse(data)
+            source_ip, _ = addr
+
+            # Validate that the data input is not empty or None
+            if data is None or len(data) == 0:
+                logging.warning("Invalid DNS request: Empty data")
+                return
+
+            # Verify that there is at least one question in the DNS request
+            if not request.questions:
+                logging.warning("Invalid DNS request: No questions found")
+                return
+
             # Get the domain name being queried
             domain = str(request.questions[0].qname)
 
@@ -269,6 +280,20 @@ class DNSServer:
         except IndexError:
             # Handle the IndexError when list index is out of range
             logging.error("Invalid DNS request: No question found")
+        except struct.error as se:
+            if se.args and str(se).startswith("Error unpacking DNSQuestion"):
+                error_message = str(se)
+                logging.error(f"Invalid DNS request: {error_message}")
+                try:
+                    send_discord_notification()  # Send Discord notification
+                except Exception as notification_error:
+                    logging.error(f"Failed to send Discord notification: {str(notification_error)}")
+            else:
+                raise
+        except Exception as e:
+            logging.error(f"Unhandled exception: {e}")
+            save_traceback()  # Save traceback to file for debugging
+
 
     # Method to handle incoming DNS requests in fallback mode
     def handle_request_fallback(self, data, addr):

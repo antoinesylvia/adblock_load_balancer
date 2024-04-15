@@ -21,7 +21,7 @@ Agents-->Metrics script<--->Load Balancer main--->PiHole/AdguardHome
 4. PiHole/AdguardHome - Receives DNS request.
 -------------------
 Fallback Mode:
-Provides a backup mechanism when the metrics server isn't unavailable or not responding correctly. In the fallback mode, the DNS server continues to handle DNS requests by randomly selecting a Pi-hole server, ensuring that the DNS resolution service remains operational even if the metrics-based server selection is not possible.
+- Provides a backup mechanism when the metrics server isn't unavailable or not responding correctly. In the fallback mode, the DNS server continues to handle DNS requests by randomly selecting a Pi-hole server, ensuring that the DNS resolution service remains operational even if the metrics-based server selection is not possible.
    
 -------------------
 Router config in DNS settings:

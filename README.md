@@ -20,6 +20,10 @@ Agents-->Metrics script<--->Load Balancer main--->PiHole/AdguardHome
 3. Load Balancer main - Pulls metrics data, makes server decision for DNS request based on least load.
 4. PiHole/AdguardHome - Receives DNS request.
 -------------------
+Fallback Mode:
+Provides a backup mechanism when the metrics server isn't unavailable or not responding correctly. In the fallback mode, the DNS server continues to handle DNS requests by randomly selecting a Pi-hole server, ensuring that the DNS resolution service remains operational even if the metrics-based server selection is not possible.
+   
+-------------------
 Router config in DNS settings:
 1. WAN DNS - Add the IP of the server(s) where you are running the Load Balancer main script.
 2. LAN DNS - Add the IP of the server(s) where you are running the Load Balancer main script (for advanced router software running under Unifi or PfSense etc., LAN DNS will ensure devices with DNS set as automatic will use the IP(s) for the Load Balancer).

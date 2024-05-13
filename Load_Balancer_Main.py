@@ -152,8 +152,10 @@ def is_valid_dns_request(data):
                 # Print the translation of the binary data
                 translation = f"Domain name: {domain} | Query type: {query_type} | Query Class: {query_class}"
                 print("Binary Translation:", translation)
+		print() 
         else:
             print("Invalid DNS request: No questions found")
+	    print() 
             return False
 
         # Validate the structure of the DNS request to ensure it conforms to the expected format

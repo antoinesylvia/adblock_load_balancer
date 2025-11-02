@@ -152,10 +152,10 @@ def is_valid_dns_request(data):
                 # Print the translation of the binary data
                 translation = f"Domain name: {domain} | Query type: {query_type} | Query Class: {query_class}"
                 print("Binary Translation:", translation)
-		print() 
+                print() 
         else:
             print("Invalid DNS request: No questions found")
-	    print() 
+            print() 
             return False
 
         # Validate the structure of the DNS request to ensure it conforms to the expected format
@@ -238,17 +238,28 @@ class DNSServer:
                 logging.warning("Invalid DNS request. Discarding the request.")
                 return
 
-            # Get least loaded server among the two non-consecutive servers
+            # Get least loaded server among the non-consecutive servers
             non_consecutive_servers = [
                 s for s in PI_HOLE_SERVERS if server_metrics.get(s) is not None and s != self.last_consecutive_server
             ]
-            if len(non_consecutive_servers) > 1:
+            
+            # Calculate load scores for debugging
+            server_scores = {}
+            for s in PI_HOLE_SERVERS:
+                if server_metrics.get(s) is not None:
+                    score = sum(value for value in server_metrics[s].values() if isinstance(value, (int, float)))
+                    server_scores[s] = score
+            
+            logging.info(f"Server scores: {server_scores}, Last used: {self.last_consecutive_server}")
+            
+            if len(non_consecutive_servers) >= 1:
                 server = min(
                     non_consecutive_servers,
                     key=lambda s: sum(
                         value for value in server_metrics[s].values() if isinstance(value, (int, float))
                     ),
                 )
+                logging.info(f"Selected {server} (score: {server_scores[server]}) from non-consecutive servers (avoiding {self.last_consecutive_server})")
             else:
                 # Fall back to the default behavior of selecting the least loaded server
                 available_servers = [s for s in PI_HOLE_SERVERS if server_metrics.get(s) is not None]
@@ -259,6 +270,7 @@ class DNSServer:
                     ),
                     default=PI_HOLE_SERVERS[0],
                 )
+                logging.info(f"Selected {server} (score: {server_scores.get(server, 'N/A')}) from all available servers (no non-consecutive servers available)")
 
             # Send the DNS request to the selected server and receive the response
             response = self.forward_dns_query(request.pack(), server)
@@ -271,11 +283,8 @@ class DNSServer:
                     log_message = f"[{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')}] Request from {source_ip} for ({domain}) forwarded to {server}:{UDP_BIND_PORT} (UDP) Metrics: {json.dumps(metrics)}"
                     logging.info(log_message)
 
-                # Update the last consecutive server
-                if self.last_consecutive_server == server:
-                    self.last_consecutive_server = None
-                else:
-                    self.last_consecutive_server = server
+                # Update the last consecutive server to avoid routing to same server next time
+                self.last_consecutive_server = server
 
                 self.socket.sendto(response, addr)
 
@@ -307,13 +316,25 @@ class DNSServer:
         request = DNSRecord.parse(data)
         domain = str(request.questions[0].qname)
         source_ip, _ = addr
-        server = random.choice(PI_HOLE_SERVERS)
+        
+        # Select a random server, but avoid selecting the same server consecutively
+        available_servers = [s for s in PI_HOLE_SERVERS if s != self.last_consecutive_server]
+        if available_servers:
+            server = random.choice(available_servers)
+        else:
+            # If only one server or all servers were last used, just pick randomly
+            server = random.choice(PI_HOLE_SERVERS)
+        
         response = self.forward_dns_query(request.pack(), server)
 
         # Check if the response is valid
         if response:
-            log_message = f"[{datetime.datetime.now()}] Request from {source_ip} for ({domain}) forwarded to {server}:{UDP_BIND_PORT} (UDP)"
+            log_message = f"[{datetime.datetime.now()}] Request from {source_ip} for ({domain}) forwarded to {server}:{UDP_BIND_PORT} (UDP) [FALLBACK MODE]"
             logging.info(log_message)
+            
+            # Update last consecutive server to avoid routing to same server next time
+            self.last_consecutive_server = server
+            
             self.socket.sendto(response, addr)
 
 
@@ -337,6 +358,7 @@ ip_address_metrics = METRICS_URL.split('//')[1].split(':')[0]
 # Function to receive metrics from the DNS servers via metrics code/server
 def receive_metrics():
     consecutive_failures = 0
+    last_logged_servers = set()  # Track which servers we've logged about
 
     while True:
         try:
@@ -347,14 +369,24 @@ def receive_metrics():
                 dns_server.fallback_mode = False  # Deactivate fallback mode
                 consecutive_failures = 0
 
+                # Only log if the set of servers has changed
+                current_servers = set(metrics.keys())
+                if current_servers != last_logged_servers:
+                    logging.info(f"Received metrics from server: {list(metrics.keys())}")
+                    logging.info(f"Expected PI_HOLE_SERVERS: {PI_HOLE_SERVERS}")
+                    last_logged_servers = current_servers
+
                 # Validate and update server metrics
                 with metrics_lock:
                     for server in PI_HOLE_SERVERS:
                         if server in metrics:
                             if validate_metrics(metrics[server]):
                                 server_metrics[server] = metrics[server]
+                                logging.debug(f"Updated metrics for {server}")
                             else:
                                 logging.warning(f"Invalid metrics received for {server}. Discarding the metrics.")
+                        else:
+                            logging.warning(f"No metrics received for {server} - server not in metrics response!")
 
             elif response.status_code != 200:
                 consecutive_failures += 1
